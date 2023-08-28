@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/jaydeluca/otel-habits/cmd"
+	"os"
+)
 
 func main() {
-	fmt.Println("hello world")
+	if err := cmd.Execute(); err != nil {
+		fmt.Fprintf(os.Stderr, "%v", err)
+		os.Exit(1)
+	}
 }
