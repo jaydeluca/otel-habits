@@ -1,13 +1,9 @@
-package transform
+package export
 
 import (
-	"context"
 	"github.com/jaydeluca/otel-habits/pkg/domain"
-	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
 	"go.opentelemetry.io/otel/sdk/instrumentation"
-	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/metric/metricdata"
 	"go.opentelemetry.io/otel/sdk/resource"
 	semconv "go.opentelemetry.io/otel/semconv/v1.17.0"
@@ -49,25 +45,4 @@ func generateDataPoints(event domain.BearTaskItem) *metricdata.ResourceMetrics {
 		},
 	}
 	return &mockData
-}
-
-func ConvertMetrics(events []domain.BearTaskItem) {
-	ctx := context.Background()
-	exp, err := otlpmetricgrpc.New(ctx)
-	if err != nil {
-		panic(err)
-	}
-
-	meterProvider := metric.NewMeterProvider(metric.WithReader(metric.NewPeriodicReader(exp)))
-	defer func() {
-		if err := meterProvider.Shutdown(ctx); err != nil {
-			panic(err)
-		}
-	}()
-	otel.SetMeterProvider(meterProvider)
-
-	// export to collector
-	for _, event := range events {
-		_ = exp.Export(ctx, generateDataPoints(event))
-	}
 }

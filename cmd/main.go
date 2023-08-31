@@ -2,13 +2,13 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/jaydeluca/otel-habits/pkg/export"
 	"github.com/jaydeluca/otel-habits/pkg/ingest"
-	"github.com/jaydeluca/otel-habits/pkg/transform"
 )
 
 func Execute() error {
 	fmt.Println("Starting App")
 	events := ingest.Ingest()
-	transform.ConvertMetrics(events)
+	export.ExhaustMetrics(events)
 	return nil
 }
