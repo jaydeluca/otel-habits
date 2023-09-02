@@ -39,7 +39,8 @@ services:
     image: grafana/grafana:latest
     volumes:
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
-      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
     environment:
       GF_INSTALL_PLUGINS: grafana-clickhouse-datasource,vertamedia-clickhouse-datasource
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: vertamedia-clickhouse-datasource

@@ -55,31 +55,19 @@ SHOW CREATE TABLE otel.otel_metrics_sum
 /* Query all*/
 SELECT MetricName, Attributes, StartTimeUnix, Value FROM otel.otel_metrics_sum;
 
-/* Query by attribute */
+
+/* Time series habit rolled up per week */
 SELECT
-    $__timeInterval(StartTimeUnix) as time,
-    count(Value)
-FROM
-    "otel"."otel_metrics_sum"
-WHERE
-    $__timeFilter(StartTimeUnix) AND
-    (Attributes = '{\'name\':\'Workout\'}') AND
-    (StartTimeUnix < now())
-GROUP BY
-    time
-ORDER BY
-    time
-    LIMIT 1000;
+    MetricName,
+    Attributes,
+    toStartOfWeek(StartTimeUnix) AS WeekStart,
+    sum(Value) AS SumValue
+FROM otel.otel_metrics_sum
+WHERE Attributes = '{\'name\':\'Italian\'}'
+GROUP BY  MetricName, Attributes, WeekStart
+ORDER BY WeekStart DESC;
 
-
-select StartTimeUnix as time, round(Value) as value
-from otel_metrics_sum
-where Attributes['name']='Read Book'
-GROUP by StartTimeUnix, Attributes, value
-ORDER by StartTimeUnix;
-
-
-
+/* Time series habit full */
 SELECT
     MetricName,
     Attributes,
@@ -87,6 +75,5 @@ SELECT
     Value
 FROM otel.otel_metrics_sum
 WHERE Attributes = '{\'name\':\'Read Book\'}'
-ORDER BY StartTimeUnix DESC
-    LIMIT 100
+ORDER BY StartTimeUnix DESC;
 ```
