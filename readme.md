@@ -1,26 +1,32 @@
 # OTEL Habits
 
-Pull daily checklists from Bear note app, convert to OTEL Metric format, submit to collector, export to data store, 
-visualize in grafana.
+Pull daily checklists in Markdown format from Bear note app, convert to OTel Metric format, submit to collector, export 
+to data store (clickhouse), visualize in grafana.
 
 ![diagram](./media/diagram.png)
 
 # Setup
 
-You will need to set an ENV var to point at the collector:
+You will need to set an ENV var on application to point at the collector:
 
 `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://localhost:4317`
 
 
 ```bash
-# Startup Clickhouse DB, OTEL collector, and Grafana
+# Startup Clickhouse DB, OTEL collector, Grafana, and run app
 docker compose up -d
+
+# or
+make docker
 
 # Make a copy of the Bear App SQLlite db
 make importdb
 
 # Run App to pull data and submit to collector
 make run
+
+# Re-import db and reset everything
+make docker-reset
 ```
 
 

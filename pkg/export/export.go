@@ -2,6 +2,7 @@ package export
 
 import (
 	"context"
+	"fmt"
 	"github.com/jaydeluca/otel-habits/pkg/domain"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
@@ -24,6 +25,7 @@ func ExhaustMetrics(events []domain.BearTaskItem) {
 	otel.SetMeterProvider(meterProvider)
 
 	// export to collector
+	fmt.Print("Exporting metrics")
 	for _, event := range events {
 		_ = exp.Export(ctx, generateDataPoints(event))
 	}

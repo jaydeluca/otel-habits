@@ -18,17 +18,6 @@ services:
     depends_on:
       - clickhouse
 
-
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:latest
-    restart: always
-    volumes:
-      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-
-
   clickhouse:
     image: clickhouse/clickhouse-server:latest
     ports:
@@ -46,3 +35,14 @@ services:
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: vertamedia-clickhouse-datasource
     ports:
       - "3001:3000"
+
+  habits-app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./data/database.sqllite:/app/bin/main/data
+    environment:
+      - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://otel-collector:4317
+    depends_on:
+      - otel-collector
