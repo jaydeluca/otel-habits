@@ -3,7 +3,26 @@
 Pull daily checklists in Markdown format from Bear note app, convert to OTel Metric format, submit to collector, export 
 to data store (clickhouse), visualize in grafana.
 
-![diagram](./media/diagram.png)
+
+<img src="./media/diagram.png" alt="Flow Diagram" width="500" />
+
+It takes the checklists in the format:
+
+```markdown
+# 2023-09-04
+
+## Daily Routine
+- [ ] Read Book
+- [ ] Italian
+- [ ] Walk Dog
+- [ ] Write Code
+- [ ] Workout
+```
+
+and converts it to metrics which can be viewed in Grafana:
+
+<img src="./media/grafana-example.png" alt="Grafana Example" width="500" />
+
 
 # Setup
 
