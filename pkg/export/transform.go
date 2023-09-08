@@ -1,7 +1,7 @@
 package export
 
 import (
-	"github.com/jaydeluca/otel-habits/pkg/domain"
+	"github.com/jaydeluca/otel-habits/pkg/ingest"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/sdk/instrumentation"
 	"go.opentelemetry.io/otel/sdk/metric/metricdata"
@@ -16,12 +16,12 @@ var (
 	)
 )
 
-func generateDataPoints(event domain.BearTaskItem) *metricdata.ResourceMetrics {
-	mockData := metricdata.ResourceMetrics{
+func generateDataPoints(event ingest.BearTaskItem) *metricdata.ResourceMetrics {
+	return &metricdata.ResourceMetrics{
 		Resource: res,
 		ScopeMetrics: []metricdata.ScopeMetrics{
 			{
-				Scope: instrumentation.Scope{Name: "example", Version: "v0.0.1"},
+				Scope: instrumentation.Scope{Name: "habit-metrics", Version: "v0.0.1"},
 				Metrics: []metricdata.Metrics{
 					{
 						Name:        "habits",
@@ -44,5 +44,4 @@ func generateDataPoints(event domain.BearTaskItem) *metricdata.ResourceMetrics {
 			},
 		},
 	}
-	return &mockData
 }

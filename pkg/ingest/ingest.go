@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"database/sql"
 	"fmt"
-	"github.com/jaydeluca/otel-habits/pkg/domain"
 	"os"
 	"strings"
 	"time"
@@ -17,7 +16,13 @@ const (
 	completedIndicator  = "- [x]"
 )
 
-func Ingest() []domain.BearTaskItem {
+type BearTaskItem struct {
+	Date      time.Time
+	Name      string
+	Completed bool
+}
+
+func Ingest() []BearTaskItem {
 	fmt.Println("ingest")
 
 	//return util.GenerateDummyData(5)
@@ -25,7 +30,7 @@ func Ingest() []domain.BearTaskItem {
 	return extractBearData()
 }
 
-func extractBearData() []domain.BearTaskItem {
+func extractBearData() []BearTaskItem {
 
 	fmt.Printf("-- Beginning Ingestion from Bear --\n")
 
@@ -53,7 +58,7 @@ func extractBearData() []domain.BearTaskItem {
 Query SQLlite database for records
 where ZTITLE is the date of the entry, and the body is the markdown checklist / notes
 */
-func retrieveDataFromBear(db *sql.DB) []domain.BearTaskItem {
+func retrieveDataFromBear(db *sql.DB) []BearTaskItem {
 	rows, err := db.Query("SELECT ZTITLE, ZTEXT FROM ZSFNOTE z where ZTEXT like '%#daily%' order by ZTITLE DESC")
 	if err != nil {
 		panic(fmt.Sprintf("failed selecting notes: %v", err))
@@ -65,7 +70,7 @@ func retrieveDataFromBear(db *sql.DB) []domain.BearTaskItem {
 		}
 	}(rows)
 
-	entries := make([]domain.BearTaskItem, 0)
+	entries := make([]BearTaskItem, 0)
 
 	for rows.Next() {
 		var ZTITLE, ZTEXT string
@@ -94,7 +99,7 @@ func retrieveDataFromBear(db *sql.DB) []domain.BearTaskItem {
 	return entries
 }
 
-func addLineEntryList(entryList []domain.BearTaskItem, item string, date string) []domain.BearTaskItem {
+func addLineEntryList(entryList []BearTaskItem, item string, date string) []BearTaskItem {
 	item = strings.TrimSpace(item)
 
 	if strings.Contains(item, completedIndicator) {
@@ -102,7 +107,7 @@ func addLineEntryList(entryList []domain.BearTaskItem, item string, date string)
 		if err != nil {
 			panic(err)
 		}
-		goalEntry := domain.BearTaskItem{Name: cleanName(item, completedIndicator), Date: eventTime, Completed: true}
+		goalEntry := BearTaskItem{Name: cleanName(item, completedIndicator), Date: eventTime, Completed: true}
 		entryList = append(entryList, goalEntry)
 	}
 	return entryList

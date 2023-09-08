@@ -2,7 +2,7 @@ package util
 
 import (
 	"fmt"
-	"github.com/jaydeluca/otel-habits/pkg/domain"
+	"github.com/jaydeluca/otel-habits/pkg/ingest"
 	"math/rand"
 	"time"
 )
@@ -31,13 +31,13 @@ func RangeDate(start, end time.Time) func() time.Time {
 }
 
 // For generating random booleans in dummy data script
-type boolgen struct {
+type boolGenerator struct {
 	src       rand.Source
 	cache     int64
 	remaining int
 }
 
-func (b *boolgen) Bool() bool {
+func (b *boolGenerator) Bool() bool {
 	if b.remaining == 0 {
 		b.cache, b.remaining = b.src.Int63(), 63
 	}
@@ -49,11 +49,11 @@ func (b *boolgen) Bool() bool {
 	return result
 }
 
-func NewBoolean() *boolgen {
-	return &boolgen{src: rand.NewSource(time.Now().UnixNano())}
+func NewBoolean() *boolGenerator {
+	return &boolGenerator{src: rand.NewSource(time.Now().UnixNano())}
 }
 
-func GenerateDummyData(recordsCount int) []domain.BearTaskItem {
+func GenerateDummyData(recordsCount int) []ingest.BearTaskItem {
 	fmt.Printf("-- Generating Dummy Data --\n")
 
 	goals := []string{
@@ -62,7 +62,7 @@ func GenerateDummyData(recordsCount int) []domain.BearTaskItem {
 		"Walk Dogs",
 	}
 
-	entries := make([]domain.BearTaskItem, 0)
+	entries := make([]ingest.BearTaskItem, 0)
 
 	end := time.Now()
 	start := end.AddDate(0, 0, -recordsCount)
@@ -80,7 +80,7 @@ func GenerateDummyData(recordsCount int) []domain.BearTaskItem {
 
 		for _, goal := range goals {
 
-			entry := domain.BearTaskItem{
+			entry := ingest.BearTaskItem{
 				Date:      date,
 				Name:      goal,
 				Completed: r.Bool(),

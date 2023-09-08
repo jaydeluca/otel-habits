@@ -3,13 +3,13 @@ package export
 import (
 	"context"
 	"fmt"
-	"github.com/jaydeluca/otel-habits/pkg/domain"
+	"github.com/jaydeluca/otel-habits/pkg/ingest"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
 	"go.opentelemetry.io/otel/sdk/metric"
 )
 
-func ExhaustMetrics(events []domain.BearTaskItem) {
+func ExhaustMetrics(events []ingest.BearTaskItem) {
 	ctx := context.Background()
 	exp, err := otlpmetricgrpc.New(ctx)
 	if err != nil {
