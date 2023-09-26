@@ -16,7 +16,7 @@ var (
 	)
 )
 
-func generateDataPoints(event ingest.BearTaskItem) *metricdata.ResourceMetrics {
+func generateDataPoints(metricName string, event ingest.Timeseries) *metricdata.ResourceMetrics {
 	return &metricdata.ResourceMetrics{
 		Resource: res,
 		ScopeMetrics: []metricdata.ScopeMetrics{
@@ -24,8 +24,8 @@ func generateDataPoints(event ingest.BearTaskItem) *metricdata.ResourceMetrics {
 				Scope: instrumentation.Scope{Name: "habit-metrics", Version: "v0.0.1"},
 				Metrics: []metricdata.Metrics{
 					{
-						Name:        "habits",
-						Description: "Tracks counts of accomplishing a daily goal",
+						Name:        metricName,
+						Description: "",
 						Unit:        "1",
 						Data: metricdata.Sum[int64]{
 							IsMonotonic: true,
@@ -35,7 +35,7 @@ func generateDataPoints(event ingest.BearTaskItem) *metricdata.ResourceMetrics {
 									Attributes: attribute.NewSet(attribute.String("name", event.Name)),
 									StartTime:  event.Date,
 									Time:       time.Now(),
-									Value:      1,
+									Value:      event.Value,
 								},
 							},
 						},

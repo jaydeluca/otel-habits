@@ -9,7 +9,7 @@ import (
 	"go.opentelemetry.io/otel/sdk/metric"
 )
 
-func ExhaustMetrics(events []ingest.BearTaskItem) {
+func ExhaustMetrics(metricName string, events []ingest.Timeseries) {
 	ctx := context.Background()
 	exp, err := otlpmetricgrpc.New(ctx)
 	if err != nil {
@@ -25,8 +25,8 @@ func ExhaustMetrics(events []ingest.BearTaskItem) {
 	otel.SetMeterProvider(meterProvider)
 
 	// export to collector
-	fmt.Print("Exporting metrics")
+	fmt.Sprintf("Exporting %s metrics\n", metricName)
 	for _, event := range events {
-		_ = exp.Export(ctx, generateDataPoints(event))
+		_ = exp.Export(ctx, generateDataPoints(metricName, event))
 	}
 }

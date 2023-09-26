@@ -7,8 +7,10 @@ import (
 )
 
 func Execute() error {
-	fmt.Println("Starting App")
-	events := ingest.Ingest()
-	export.ExhaustMetrics(events)
+	fmt.Println("Ingesting Habit data from Bear")
+	export.ExhaustMetrics("habits", ingest.Ingest())
+
+	fmt.Println("Ingesting Reading data from Google Sheets")
+	export.ExhaustMetrics("reading", ingest.Sheets())
 	return nil
 }

@@ -54,6 +54,8 @@ make docker-reset
 
 Queries
 
+Jump on the clickhouse box and use the `clickhouse-client` binary to login and interact:
+
 ```sql
 /* show database list */
 SHOW DATABASES;
