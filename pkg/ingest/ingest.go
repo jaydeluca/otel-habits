@@ -82,13 +82,22 @@ func retrieveDataFromBear(db *sql.DB) []BearTaskItem {
 		scanner := bufio.NewScanner(strings.NewReader(ZTEXT))
 		for scanner.Scan() {
 			item := scanner.Text()
+			item = strings.TrimSpace(item)
+
 			// All daily checklist blocks begin with this
 			if strings.Contains(item, "## Daily Routine") {
 				dailyFlag = true
 			}
 			// only ingest daily goals, ignore all other content in note
 			if dailyFlag {
-				entries = addLineEntryList(entries, item, ZTITLE)
+				if strings.Contains(item, completedIndicator) {
+					eventTime, err := time.Parse("2006-01-02", ZTITLE)
+					if err != nil {
+						panic(err)
+					}
+					goalEntry := BearTaskItem{Name: cleanName(item, completedIndicator), Date: eventTime, Completed: true}
+					entries = append(entries, goalEntry)
+				}
 			}
 			if strings.TrimSpace(item) == "" {
 				dailyFlag = false
@@ -97,20 +106,6 @@ func retrieveDataFromBear(db *sql.DB) []BearTaskItem {
 	}
 
 	return entries
-}
-
-func addLineEntryList(entryList []BearTaskItem, item string, date string) []BearTaskItem {
-	item = strings.TrimSpace(item)
-
-	if strings.Contains(item, completedIndicator) {
-		eventTime, err := time.Parse("2006-01-02", date)
-		if err != nil {
-			panic(err)
-		}
-		goalEntry := BearTaskItem{Name: cleanName(item, completedIndicator), Date: eventTime, Completed: true}
-		entryList = append(entryList, goalEntry)
-	}
-	return entryList
 }
 
 func cleanName(item, statusIndicator string) string {
