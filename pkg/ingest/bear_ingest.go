@@ -16,13 +16,7 @@ const (
 	completedIndicator  = "- [x]"
 )
 
-type BearTaskItem struct {
-	Date      time.Time
-	Name      string
-	Completed bool
-}
-
-func Ingest() []BearTaskItem {
+func Ingest() []Timeseries {
 	fmt.Println("ingest")
 
 	//return util.GenerateDummyData(5)
@@ -30,7 +24,7 @@ func Ingest() []BearTaskItem {
 	return extractBearData()
 }
 
-func extractBearData() []BearTaskItem {
+func extractBearData() []Timeseries {
 
 	fmt.Printf("-- Beginning Ingestion from Bear --\n")
 
@@ -58,7 +52,7 @@ func extractBearData() []BearTaskItem {
 Query SQLlite database for records
 where ZTITLE is the date of the entry, and the body is the markdown checklist / notes
 */
-func retrieveDataFromBear(db *sql.DB) []BearTaskItem {
+func retrieveDataFromBear(db *sql.DB) []Timeseries {
 	rows, err := db.Query("SELECT ZTITLE, ZTEXT FROM ZSFNOTE z where ZTEXT like '%#daily%' order by ZTITLE DESC")
 	if err != nil {
 		panic(fmt.Sprintf("failed selecting notes: %v", err))
@@ -70,7 +64,7 @@ func retrieveDataFromBear(db *sql.DB) []BearTaskItem {
 		}
 	}(rows)
 
-	entries := make([]BearTaskItem, 0)
+	entries := make([]Timeseries, 0)
 
 	for rows.Next() {
 		var ZTITLE, ZTEXT string
@@ -82,13 +76,22 @@ func retrieveDataFromBear(db *sql.DB) []BearTaskItem {
 		scanner := bufio.NewScanner(strings.NewReader(ZTEXT))
 		for scanner.Scan() {
 			item := scanner.Text()
+			item = strings.TrimSpace(item)
+
 			// All daily checklist blocks begin with this
 			if strings.Contains(item, "## Daily Routine") {
 				dailyFlag = true
 			}
 			// only ingest daily goals, ignore all other content in note
 			if dailyFlag {
-				entries = addLineEntryList(entries, item, ZTITLE)
+				if strings.Contains(item, completedIndicator) {
+					eventTime, err := time.Parse("2006-01-02", ZTITLE)
+					if err != nil {
+						panic(err)
+					}
+					goalEntry := Timeseries{Name: cleanName(item, completedIndicator), Date: eventTime, Value: 1}
+					entries = append(entries, goalEntry)
+				}
 			}
 			if strings.TrimSpace(item) == "" {
 				dailyFlag = false
@@ -97,20 +100,6 @@ func retrieveDataFromBear(db *sql.DB) []BearTaskItem {
 	}
 
 	return entries
-}
-
-func addLineEntryList(entryList []BearTaskItem, item string, date string) []BearTaskItem {
-	item = strings.TrimSpace(item)
-
-	if strings.Contains(item, completedIndicator) {
-		eventTime, err := time.Parse("2006-01-02", date)
-		if err != nil {
-			panic(err)
-		}
-		goalEntry := BearTaskItem{Name: cleanName(item, completedIndicator), Date: eventTime, Completed: true}
-		entryList = append(entryList, goalEntry)
-	}
-	return entryList
 }
 
 func cleanName(item, statusIndicator string) string {

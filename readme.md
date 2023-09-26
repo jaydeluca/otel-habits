@@ -1,25 +1,44 @@
-# OTEL Habits
+# OTel Habits
 
-Pull daily checklists in Markdown format from Bear note app, convert to OTel Metric format, submit to collector, export 
-to data store (clickhouse), visualize in grafana.
+The goal is to pull some data associated with some habits I'm tracking in various formats, convert them into OTel metrics 
+and visualize them in grafana.
 
+Will use clickhouse as the metric data store.
 
 <img src="./media/diagram.png" alt="Flow Diagram" width="500" />
 
-It takes the checklists in the format:
+## Habits
+
+Daily habits are tracked with the [Bear note app](https://bear.app/) in the format:
 
 ```markdown
 # 2023-09-04
 
 ## Daily Routine
 - [ ] Read Book
-- [ ] Italian
+- [x] Italian
 - [ ] Walk Dog
 - [ ] Write Code
 - [ ] Workout
 ```
 
-and converts it to metrics which can be viewed in Grafana:
+## Reading
+
+Reading data is tracked in a google sheet with the format:
+
+| Date    | Start Page | End Page | Minutes | Total Pages | Pages / Min | Book                         |
+|---------|------------|----------|---------|-------------|-------------|------------------------------|
+| 5/7/21  | 336        | 351      | 30      | 15          | 0.50        | Site Reliability Engineering |
+| 5/9/21  | 352        | 367      | 30      | 15          | 0.50        | Site Reliability Engineering |
+| 5/10/21 | 368        | 387      | 37      | 19          | 0.51        | Site Reliability Engineering |
+| 5/11/21 | 389        | 409      | 35      | 20          | 0.57        | Site Reliability Engineering |
+| 5/12/21 | 410        | 436      | 38      | 26          | 0.68        | Site Reliability Engineering |
+| 5/13/21 | 437        | 453      | 30      | 16          | 0.53        | Site Reliability Engineering |
+
+
+## Output 
+
+The data is turned into timeseries and can then be viewed in [Grafana](http://localhost:3001/) with a pre-created dashboard:
 
 <img src="./media/grafana-example.png" alt="Grafana Example" width="500" />
 
@@ -49,10 +68,17 @@ make docker-reset
 ```
 
 
+## Google sheets
+
+Needed to create a service account, download the secret and add it to this repo as `secret.json`, and then invite the
+service account's email address to collaborate on the document.
+
 
 ## Clickhouse
 
 Queries
+
+Jump on the clickhouse box and use the `clickhouse-client` binary to login and interact:
 
 ```sql
 /* show database list */

@@ -37,6 +37,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 1,
             "barAlignment": 0,
             "drawStyle": "bars",
             "fillOpacity": 0,
@@ -134,201 +135,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 13,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "dashed"
-            }
-          },
-          "mappings": [],
-          "max": 8,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 7
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 0
-      },
-      "id": 4,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "builderOptions": "The query is not a select statement.",
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "P5C0FA5C61C0F8586"
-          },
-          "format": 1,
-          "meta": {
-            "builderOptions": "The query is not a select statement."
-          },
-          "queryType": "sql",
-          "rawSql": "SELECT\n    MetricName,\n    Attributes,\n    toStartOfWeek(StartTimeUnix) AS WeekStart,\n    sum(Value) AS SumValue\nFROM otel.otel_metrics_sum\nWHERE Attributes = '{\\'name\\':\\'Read Book\\'}'\nGROUP BY MetricName, Attributes, WeekStart\nORDER BY WeekStart DESC;",
-          "refId": "A",
-          "selectedFormat": 4
-        }
-      ],
-      "title": "Read Book (week rollup)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-clickhouse-datasource",
-        "uid": "P5C0FA5C61C0F8586"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 6,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 8
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "builderOptions": "The query is not a select statement.",
-          "datasource": {
-            "type": "grafana-clickhouse-datasource",
-            "uid": "P5C0FA5C61C0F8586"
-          },
-          "format": 1,
-          "meta": {
-            "builderOptions": "The query is not a select statement."
-          },
-          "queryType": "sql",
-          "rawSql": "SELECT\n    MetricName,\n    Attributes,\n    StartTimeUnix,\n    Value\nFROM otel.otel_metrics_sum\nWHERE Attributes = '{\\'name\\':\\'Workout\\'}'\nORDER BY StartTimeUnix DESC;",
-          "refId": "A",
-          "selectedFormat": 4
-        }
-      ],
-      "title": "Workout",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-clickhouse-datasource",
-        "uid": "P5C0FA5C61C0F8586"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
+            "axisSoftMax": 7,
             "barAlignment": 1,
             "drawStyle": "line",
             "fillOpacity": 0,
@@ -377,7 +184,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 0
       },
       "id": 5,
       "options": {
@@ -428,7 +235,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "drawStyle": "bars",
+            "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -437,9 +244,9 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 1,
-            "pointSize": 6,
+            "pointSize": 13,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -450,10 +257,11 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "dashed"
             }
           },
           "mappings": [],
+          "max": 8,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -463,7 +271,7 @@
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 7
               }
             ]
           }
@@ -474,9 +282,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 8
       },
-      "id": 3,
+      "id": 4,
       "options": {
         "legend": {
           "calcs": [],
@@ -501,12 +309,12 @@
             "builderOptions": "The query is not a select statement."
           },
           "queryType": "sql",
-          "rawSql": "SELECT\n    MetricName,\n    Attributes,\n    StartTimeUnix,\n    Value\nFROM otel.otel_metrics_sum\nWHERE Attributes = '{\\'name\\':\\'Write Code\\'}'\nORDER BY StartTimeUnix DESC;",
+          "rawSql": "SELECT\n    MetricName,\n    Attributes,\n    toStartOfWeek(StartTimeUnix) AS WeekStart,\n    sum(Value) AS SumValue\nFROM otel.otel_metrics_sum\nWHERE Attributes = '{\\'name\\':\\'Read Book\\'}'\nGROUP BY MetricName, Attributes, WeekStart\nORDER BY WeekStart DESC;",
           "refId": "A",
           "selectedFormat": 4
         }
       ],
-      "title": "Write Code",
+      "title": "Read Book (week rollup)",
       "type": "timeseries"
     },
     {
@@ -524,6 +332,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": -3,
             "barAlignment": 1,
             "drawStyle": "line",
             "fillOpacity": 0,
@@ -572,7 +381,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 8
       },
       "id": 6,
       "options": {
@@ -606,6 +415,201 @@
       ],
       "title": "Write Code (week rollup)",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "P5C0FA5C61C0F8586"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 6,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "builderOptions": "The query is not a select statement.",
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "P5C0FA5C61C0F8586"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": "The query is not a select statement."
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT\n    MetricName,\n    Attributes,\n    StartTimeUnix,\n    Value\nFROM otel.otel_metrics_sum\nWHERE MetricName = 'reading'\nORDER BY StartTimeUnix DESC;",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Reading Time per Day",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-clickhouse-datasource",
+        "uid": "P5C0FA5C61C0F8586"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 1,
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 6,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "builderOptions": "The query is not a select statement.",
+          "datasource": {
+            "type": "grafana-clickhouse-datasource",
+            "uid": "P5C0FA5C61C0F8586"
+          },
+          "format": 1,
+          "meta": {
+            "builderOptions": "The query is not a select statement."
+          },
+          "queryType": "sql",
+          "rawSql": "SELECT\n    MetricName,\n    Attributes,\n    StartTimeUnix,\n    Value\nFROM otel.otel_metrics_sum\nWHERE Attributes = '{\\'name\\':\\'Write Code\\'}'\nORDER BY StartTimeUnix DESC;",
+          "refId": "A",
+          "selectedFormat": 4
+        }
+      ],
+      "title": "Write Code",
+      "type": "timeseries"
     }
   ],
   "refresh": "",
@@ -623,6 +627,6 @@
   "timezone": "",
   "title": "Habit Activity over Time",
   "uid": "fb1a58b2-4d66-4dd2-ab88-75b0b64e4639",
-  "version": 3,
+  "version": 7,
   "weekStart": ""
 }
