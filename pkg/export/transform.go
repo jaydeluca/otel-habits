@@ -1,7 +1,7 @@
 package export
 
 import (
-	"github.com/jaydeluca/otel-habits/pkg/ingest"
+	"github.com/jaydeluca/otel-habits/pkg/models"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/sdk/instrumentation"
 	"go.opentelemetry.io/otel/sdk/metric/metricdata"
@@ -16,7 +16,7 @@ var (
 	)
 )
 
-func generateDataPoints(metricName string, event ingest.Timeseries) *metricdata.ResourceMetrics {
+func generateDataPoints(metricName string, event models.Timeseries) *metricdata.ResourceMetrics {
 	return &metricdata.ResourceMetrics{
 		Resource: res,
 		ScopeMetrics: []metricdata.ScopeMetrics{

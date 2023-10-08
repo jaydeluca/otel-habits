@@ -1,6 +1,7 @@
 package ingest
 
 import (
+	"github.com/jaydeluca/otel-habits/pkg/models"
 	"gopkg.in/Iwark/spreadsheet.v2"
 	"os"
 	"strconv"
@@ -12,7 +13,7 @@ import (
 
 const sheet = "1e-vL6bAHhuUZU2xCVDSSvgCAQMKCFMnPocn169ULpSg"
 
-func Sheets() []Timeseries {
+func Sheets() []models.Timeseries {
 
 	// Columns:
 	//	Date, Start Page, End Page, Minutes, Total Pages, Pages / Min, Book
@@ -35,7 +36,7 @@ func Sheets() []Timeseries {
 
 	sheets := []string{"Reading 2021", "Reading 2022", "Reading 2023"}
 
-	entries := make([]Timeseries, 0)
+	entries := make([]models.Timeseries, 0)
 
 	for _, sheetName := range sheets {
 		sheet, err := spreadsheet.SheetByTitle(sheetName)
@@ -59,7 +60,7 @@ func Sheets() []Timeseries {
 				minutes = 0
 			}
 
-			entries = append(entries, Timeseries{
+			entries = append(entries, models.Timeseries{
 				Date:  date,
 				Name:  row[6].Value,
 				Value: int64(minutes),

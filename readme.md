@@ -60,7 +60,7 @@ make docker
 # Make a copy of the Bear App SQLlite db
 make importdb
 
-# Run App to pull data and submit to collector
+# Run App to pull models and submit to collector
 make run
 
 # Re-import db and reset everything

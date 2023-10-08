@@ -41,8 +41,9 @@ services:
       context: ./
       dockerfile: Dockerfile
     volumes:
-      - ./data/database.sqllite:/app/bin/main/data
+      - ./models/database.sqllite:/app/bin/main/models
     environment:
       - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://otel-collector:4317
+      - GENERATE_DATA_DAY_COUNT=10
     depends_on:
       - otel-collector
