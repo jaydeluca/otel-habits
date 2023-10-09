@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"database/sql"
 	"fmt"
+	"github.com/jaydeluca/otel-habits/pkg/models"
+	"github.com/jaydeluca/otel-habits/pkg/util"
 	"os"
 	"strings"
 	"time"
@@ -16,15 +18,14 @@ const (
 	completedIndicator  = "- [x]"
 )
 
-func Ingest() []Timeseries {
-	fmt.Println("ingest")
-
-	//return util.GenerateDummyData(5)
-
+func BearData(generationDayCount int) []models.Timeseries {
+	if generationDayCount > 0 {
+		return util.GenerateDummyHabitData(generationDayCount)
+	}
 	return extractBearData()
 }
 
-func extractBearData() []Timeseries {
+func extractBearData() []models.Timeseries {
 
 	fmt.Printf("-- Beginning Ingestion from Bear --\n")
 
@@ -52,7 +53,7 @@ func extractBearData() []Timeseries {
 Query SQLlite database for records
 where ZTITLE is the date of the entry, and the body is the markdown checklist / notes
 */
-func retrieveDataFromBear(db *sql.DB) []Timeseries {
+func retrieveDataFromBear(db *sql.DB) []models.Timeseries {
 	rows, err := db.Query("SELECT ZTITLE, ZTEXT FROM ZSFNOTE z where ZTEXT like '%#daily%' order by ZTITLE DESC")
 	if err != nil {
 		panic(fmt.Sprintf("failed selecting notes: %v", err))
@@ -64,7 +65,7 @@ func retrieveDataFromBear(db *sql.DB) []Timeseries {
 		}
 	}(rows)
 
-	entries := make([]Timeseries, 0)
+	entries := make([]models.Timeseries, 0)
 
 	for rows.Next() {
 		var ZTITLE, ZTEXT string
@@ -89,7 +90,7 @@ func retrieveDataFromBear(db *sql.DB) []Timeseries {
 					if err != nil {
 						panic(err)
 					}
-					goalEntry := Timeseries{Name: cleanName(item, completedIndicator), Date: eventTime, Value: 1}
+					goalEntry := models.Timeseries{Name: cleanName(item, completedIndicator), Date: eventTime, Value: 1}
 					entries = append(entries, goalEntry)
 				}
 			}

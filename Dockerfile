@@ -17,7 +17,7 @@ RUN go mod download
 COPY ./ .
 
 # Build the application.
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=arm64 go build -o ./main .
+RUN CGO_ENABLED=1 GOOS=linux go build -o ./main .
 
 
 # Run executable

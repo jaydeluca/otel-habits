@@ -2,7 +2,7 @@ package util
 
 import (
 	"fmt"
-	"github.com/jaydeluca/otel-habits/pkg/ingest"
+	"github.com/jaydeluca/otel-habits/pkg/models"
 	"math/rand"
 	"time"
 )
@@ -30,47 +30,22 @@ func RangeDate(start, end time.Time) func() time.Time {
 	}
 }
 
-// For generating random booleans in dummy data script
-type boolGenerator struct {
-	src       rand.Source
-	cache     int64
-	remaining int
-}
-
-func (b *boolGenerator) Bool() bool {
-	if b.remaining == 0 {
-		b.cache, b.remaining = b.src.Int63(), 63
-	}
-
-	result := b.cache&0x01 == 1
-	b.cache >>= 1
-	b.remaining--
-
-	return result
-}
-
-func NewBoolean() *boolGenerator {
-	return &boolGenerator{src: rand.NewSource(time.Now().UnixNano())}
-}
-
-func GenerateDummyData(recordsCount int) []ingest.BearTaskItem {
-	fmt.Printf("-- Generating Dummy Data --\n")
+func GenerateDummyHabitData(recordsCount int) []models.Timeseries {
+	fmt.Printf("-- Generating Dummy Habit Data --\n")
 
 	goals := []string{
 		"Workout",
 		"Write Code",
-		"Walk Dogs",
+		"Read Book",
 	}
 
-	entries := make([]ingest.BearTaskItem, 0)
+	entries := make([]models.Timeseries, 0)
 
 	end := time.Now()
 	start := end.AddDate(0, 0, -recordsCount)
 	fmt.Println(
 		"Generating data for time range: ", start.Format(DateFormatString), "-", end.Format(DateFormatString),
 	)
-
-	r := NewBoolean()
 
 	for rd := RangeDate(start, end); ; {
 		date := rd()
@@ -80,13 +55,41 @@ func GenerateDummyData(recordsCount int) []ingest.BearTaskItem {
 
 		for _, goal := range goals {
 
-			entry := ingest.BearTaskItem{
-				Date:      date,
-				Name:      goal,
-				Completed: r.Bool(),
+			entry := models.Timeseries{
+				Date:  date,
+				Name:  goal,
+				Value: int64(rand.Intn(2)),
 			}
 			entries = append(entries, entry)
 		}
+	}
+
+	return entries
+}
+
+func GenerateDummyReadingData(recordsCount int) []models.Timeseries {
+	fmt.Printf("-- Generating Dummy Reading Data --\n")
+
+	entries := make([]models.Timeseries, 0)
+
+	end := time.Now()
+	start := end.AddDate(0, 0, -recordsCount)
+	fmt.Println(
+		"Generating data for time range: ", start.Format(DateFormatString), "-", end.Format(DateFormatString),
+	)
+
+	for rd := RangeDate(start, end); ; {
+		date := rd()
+		if date.IsZero() {
+			break
+		}
+
+		entry := models.Timeseries{
+			Date:  date,
+			Name:  "reading",
+			Value: int64(rand.Intn(60)),
+		}
+		entries = append(entries, entry)
 	}
 
 	return entries
