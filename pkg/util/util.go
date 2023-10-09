@@ -30,8 +30,8 @@ func RangeDate(start, end time.Time) func() time.Time {
 	}
 }
 
-func GenerateDummyData(recordsCount int) []models.Timeseries {
-	fmt.Printf("-- Generating Dummy Data --\n")
+func GenerateDummyHabitData(recordsCount int) []models.Timeseries {
+	fmt.Printf("-- Generating Dummy Habit Data --\n")
 
 	goals := []string{
 		"Workout",
@@ -44,7 +44,7 @@ func GenerateDummyData(recordsCount int) []models.Timeseries {
 	end := time.Now()
 	start := end.AddDate(0, 0, -recordsCount)
 	fmt.Println(
-		"Generating models for time range: ", start.Format(DateFormatString), "-", end.Format(DateFormatString),
+		"Generating data for time range: ", start.Format(DateFormatString), "-", end.Format(DateFormatString),
 	)
 
 	for rd := RangeDate(start, end); ; {
@@ -62,6 +62,34 @@ func GenerateDummyData(recordsCount int) []models.Timeseries {
 			}
 			entries = append(entries, entry)
 		}
+	}
+
+	return entries
+}
+
+func GenerateDummyReadingData(recordsCount int) []models.Timeseries {
+	fmt.Printf("-- Generating Dummy Reading Data --\n")
+
+	entries := make([]models.Timeseries, 0)
+
+	end := time.Now()
+	start := end.AddDate(0, 0, -recordsCount)
+	fmt.Println(
+		"Generating data for time range: ", start.Format(DateFormatString), "-", end.Format(DateFormatString),
+	)
+
+	for rd := RangeDate(start, end); ; {
+		date := rd()
+		if date.IsZero() {
+			break
+		}
+
+		entry := models.Timeseries{
+			Date:  date,
+			Name:  "reading",
+			Value: int64(rand.Intn(60)),
+		}
+		entries = append(entries, entry)
 	}
 
 	return entries

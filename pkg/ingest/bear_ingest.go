@@ -28,7 +28,7 @@ func BearData() []models.Timeseries {
 		}
 		fmt.Sprintf("Env var set to generate %d days worth of models", dayInt)
 
-		return util.GenerateDummyData(dayInt)
+		return util.GenerateDummyHabitData(dayInt)
 	}
 	return extractBearData()
 }

@@ -51,7 +51,7 @@ You will need to set an ENV var on application to point at the collector:
 
 
 ```bash
-# Startup Clickhouse DB, OTEL collector, Grafana, and run app
+# Startup Clickhouse DB, OTel collector, Grafana, and run app
 docker compose up -d
 
 # or
@@ -60,8 +60,11 @@ make docker
 # Make a copy of the Bear App SQLlite db
 make importdb
 
-# Run App to pull models and submit to collector
+# Run App to pull data and submit to collector
 make run
+
+# Run app and generate all fake data and submit it to the collector
+make run-dummy
 
 # Re-import db and reset everything
 make docker-reset

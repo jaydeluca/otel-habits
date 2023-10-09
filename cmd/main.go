@@ -7,10 +7,10 @@ import (
 )
 
 func Execute() error {
-	fmt.Println("Ingesting Habit models from Bear")
+	fmt.Println("Ingesting Habit data from Bear")
 	export.ExhaustMetrics("habits", ingest.BearData())
 
-	fmt.Println("Ingesting Reading models from Google Sheets")
+	fmt.Println("Ingesting Reading data from Google Sheets")
 	export.ExhaustMetrics("reading", ingest.Sheets())
 	return nil
 }

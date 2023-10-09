@@ -1,7 +1,9 @@
 package ingest
 
 import (
+	"fmt"
 	"github.com/jaydeluca/otel-habits/pkg/models"
+	"github.com/jaydeluca/otel-habits/pkg/util"
 	"gopkg.in/Iwark/spreadsheet.v2"
 	"os"
 	"strconv"
@@ -14,6 +16,17 @@ import (
 const sheet = "1e-vL6bAHhuUZU2xCVDSSvgCAQMKCFMnPocn169ULpSg"
 
 func Sheets() []models.Timeseries {
+
+	dayCount := os.Getenv("GENERATE_DATA_DAY_COUNT")
+	if dayCount != "" {
+		dayInt, err := strconv.Atoi(dayCount)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Sprintf("Env var set to generate %d days worth of models", dayInt)
+
+		return util.GenerateDummyReadingData(dayInt)
+	}
 
 	// Columns:
 	//	Date, Start Page, End Page, Minutes, Total Pages, Pages / Min, Book
