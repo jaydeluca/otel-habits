@@ -44,6 +44,6 @@ services:
       - ./data/database.sqllite:/app/bin/main/data
     environment:
       - OTEL_EXPORTER_OTLP_METRICS_ENDPOINT=http://otel-collector:4317
-      - GENERATE_DATA_DAY_COUNT=10
+      - GENERATE_DATA_DAY_COUNT=360
     depends_on:
       - otel-collector

@@ -7,7 +7,6 @@ import (
 	"github.com/jaydeluca/otel-habits/pkg/models"
 	"github.com/jaydeluca/otel-habits/pkg/util"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 
@@ -19,16 +18,9 @@ const (
 	completedIndicator  = "- [x]"
 )
 
-func BearData() []models.Timeseries {
-	dayCount := os.Getenv("GENERATE_DATA_DAY_COUNT")
-	if dayCount != "" {
-		dayInt, err := strconv.Atoi(dayCount)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Sprintf("Env var set to generate %d days worth of models", dayInt)
-
-		return util.GenerateDummyHabitData(dayInt)
+func BearData(generationDayCount int) []models.Timeseries {
+	if generationDayCount > 0 {
+		return util.GenerateDummyHabitData(generationDayCount)
 	}
 	return extractBearData()
 }
