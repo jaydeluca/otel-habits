@@ -1,8 +1,8 @@
 package ingest
 
 import (
-	"github.com/jaydeluca/otel-habits/pkg/models"
 	"github.com/jaydeluca/otel-habits/pkg/util"
+	"go.opentelemetry.io/otel/sdk/metric/metricdata"
 	"gopkg.in/Iwark/spreadsheet.v2"
 	"os"
 	"strconv"
@@ -14,7 +14,7 @@ import (
 
 const sheet = "1e-vL6bAHhuUZU2xCVDSSvgCAQMKCFMnPocn169ULpSg"
 
-func Sheets(generationDayCount int) []models.Timeseries {
+func Sheets(generationDayCount int) []metricdata.DataPoint[float64] {
 	if generationDayCount > 0 {
 		return util.GenerateDummyReadingData(generationDayCount)
 	}
@@ -40,7 +40,7 @@ func Sheets(generationDayCount int) []models.Timeseries {
 
 	sheets := []string{"Reading 2021", "Reading 2022", "Reading 2023"}
 
-	entries := make([]models.Timeseries, 0)
+	entries := make([]metricdata.DataPoint[float64], 0)
 
 	for _, sheetName := range sheets {
 		sheet, err := spreadsheet.SheetByTitle(sheetName)
@@ -64,11 +64,7 @@ func Sheets(generationDayCount int) []models.Timeseries {
 				minutes = 0
 			}
 
-			entries = append(entries, models.Timeseries{
-				Date:  date,
-				Name:  row[6].Value,
-				Value: int64(minutes),
-			})
+			entries = append(entries, *util.GenerateDataPoint(date, row[6].Value, float64(minutes)))
 		}
 	}
 
