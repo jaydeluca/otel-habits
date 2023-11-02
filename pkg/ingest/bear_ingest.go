@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"database/sql"
 	"fmt"
-	"github.com/jaydeluca/otel-habits/pkg/models"
 	"github.com/jaydeluca/otel-habits/pkg/util"
+	"go.opentelemetry.io/otel/sdk/metric/metricdata"
 	"os"
 	"strings"
 	"time"
@@ -18,14 +18,14 @@ const (
 	completedIndicator  = "- [x]"
 )
 
-func BearData(generationDayCount int) []models.Timeseries {
+func BearData(generationDayCount int) []metricdata.DataPoint[float64] {
 	if generationDayCount > 0 {
 		return util.GenerateDummyHabitData(generationDayCount)
 	}
 	return extractBearData()
 }
 
-func extractBearData() []models.Timeseries {
+func extractBearData() []metricdata.DataPoint[float64] {
 
 	fmt.Printf("-- Beginning Ingestion from Bear --\n")
 
@@ -53,7 +53,7 @@ func extractBearData() []models.Timeseries {
 Query SQLlite database for records
 where ZTITLE is the date of the entry, and the body is the markdown checklist / notes
 */
-func retrieveDataFromBear(db *sql.DB) []models.Timeseries {
+func retrieveDataFromBear(db *sql.DB) []metricdata.DataPoint[float64] {
 	rows, err := db.Query("SELECT ZTITLE, ZTEXT FROM ZSFNOTE z where ZTEXT like '%#daily%' order by ZTITLE DESC")
 	if err != nil {
 		panic(fmt.Sprintf("failed selecting notes: %v", err))
@@ -65,7 +65,7 @@ func retrieveDataFromBear(db *sql.DB) []models.Timeseries {
 		}
 	}(rows)
 
-	entries := make([]models.Timeseries, 0)
+	entries := make([]metricdata.DataPoint[float64], 0)
 
 	for rows.Next() {
 		var ZTITLE, ZTEXT string
@@ -90,8 +90,8 @@ func retrieveDataFromBear(db *sql.DB) []models.Timeseries {
 					if err != nil {
 						panic(err)
 					}
-					goalEntry := models.Timeseries{Name: cleanName(item, completedIndicator), Date: eventTime, Value: 1}
-					entries = append(entries, goalEntry)
+					goalEntry := util.GenerateDataPoint(eventTime, cleanName(item, completedIndicator), 1.0)
+					entries = append(entries, *goalEntry)
 				}
 			}
 			if strings.TrimSpace(item) == "" {

@@ -2,7 +2,7 @@ package util
 
 import (
 	"fmt"
-	"github.com/jaydeluca/otel-habits/pkg/models"
+	"go.opentelemetry.io/otel/sdk/metric/metricdata"
 	"math/rand"
 	"time"
 )
@@ -30,7 +30,7 @@ func RangeDate(start, end time.Time) func() time.Time {
 	}
 }
 
-func GenerateDummyHabitData(recordsCount int) []models.Timeseries {
+func GenerateDummyHabitData(recordsCount int) []metricdata.DataPoint[float64] {
 	fmt.Printf("-- Generating Dummy Habit Data --\n")
 
 	goals := []string{
@@ -39,7 +39,7 @@ func GenerateDummyHabitData(recordsCount int) []models.Timeseries {
 		"Read Book",
 	}
 
-	entries := make([]models.Timeseries, 0)
+	entries := make([]metricdata.DataPoint[float64], 0)
 
 	end := time.Now()
 	start := end.AddDate(0, 0, -recordsCount)
@@ -54,23 +54,18 @@ func GenerateDummyHabitData(recordsCount int) []models.Timeseries {
 		}
 
 		for _, goal := range goals {
-
-			entry := models.Timeseries{
-				Date:  date,
-				Name:  goal,
-				Value: int64(rand.Intn(2)),
-			}
-			entries = append(entries, entry)
+			entry := GenerateDataPoint(date, goal, float64(rand.Intn(2)))
+			entries = append(entries, *entry)
 		}
 	}
 
 	return entries
 }
 
-func GenerateDummyReadingData(recordsCount int) []models.Timeseries {
+func GenerateDummyReadingData(recordsCount int) []metricdata.DataPoint[float64] {
 	fmt.Printf("-- Generating Dummy Reading Data --\n")
 
-	entries := make([]models.Timeseries, 0)
+	entries := make([]metricdata.DataPoint[float64], 0)
 
 	end := time.Now()
 	start := end.AddDate(0, 0, -recordsCount)
@@ -84,12 +79,8 @@ func GenerateDummyReadingData(recordsCount int) []models.Timeseries {
 			break
 		}
 
-		entry := models.Timeseries{
-			Date:  date,
-			Name:  "reading",
-			Value: int64(rand.Intn(60)),
-		}
-		entries = append(entries, entry)
+		entry := GenerateDataPoint(date, "reading", float64(rand.Intn(60)))
+		entries = append(entries, *entry)
 	}
 
 	return entries
